@@ -2,17 +2,16 @@ name: build
 
 on:
   push:
+    branches: [ main, master ]
+  pull_request:
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Descargar repo
+      - name: Descargar código
         uses: actions/checkout@v4
-
-      - name: Descomprimir rubymod.zip
-        run: unzip -q rubymod.zip
 
       - name: Instalar Java 17
         uses: actions/setup-java@v4
@@ -26,11 +25,10 @@ jobs:
           gradle-version: 8.1.1
 
       - name: Compilar
-        working-directory: rubymod
         run: gradle build --no-daemon
 
       - name: Subir el .jar
         uses: actions/upload-artifact@v4
         with:
           name: mod-jar
-          path: rubymod/build/libs/*.jar
+          path: build/libs/*.jar
